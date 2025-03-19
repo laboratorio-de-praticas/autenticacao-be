@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 import { VersioningType } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 
 async function bootstrap() {
-  dotenv.config();  
+  dotenv.config();
 
   const app = await NestFactory.create(AppModule);
   app.enableVersioning({
