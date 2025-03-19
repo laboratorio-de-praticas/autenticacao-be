@@ -12,7 +12,7 @@ import { databaseConstants } from './auth/constants';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: 5432,
+      port: databaseConstants.port,
       username: databaseConstants.username,
       password: databaseConstants.password,
       database: databaseConstants.database,
