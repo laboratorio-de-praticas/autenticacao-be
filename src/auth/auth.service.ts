@@ -2,8 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { ValidateLoginUserDto } from './dto/validate-login-user.dto';
-import { LoginUserResponseDto } from './dto/login-user-response.dto';
+import { UserLoginResponseDto } from './dto/user-login-response.dto';
+import { AuthenticatedUser } from './interfaces/authenticated-user';
 
 @Injectable()
 export class AuthService {
@@ -15,24 +15,25 @@ export class AuthService {
   async validateUser(
     email: string,
     password: string,
-  ): Promise<ValidateLoginUserDto> {
+  ): Promise<AuthenticatedUser> {
     const user = await this.usersService.findByEmail(email);
-    if (user) {
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (isMatch) {
-        const { password, ...result } = user;
-
-        return result;
-      }
+    if (!user) {
+      throw new UnauthorizedException('E-mail ou senha inválidos.');
     }
 
-    throw new UnauthorizedException('E-mail ou senha inválidos.');
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('E-mail ou senha inválidos.');
+    }
+
+    const { password: _, ...result } = user;
+    return result as AuthenticatedUser;
   }
 
-  login(user: ValidateLoginUserDto): Promise<LoginUserResponseDto> {
+  async login(user: AuthenticatedUser): Promise<UserLoginResponseDto> {
     const payload = { email: user.email, id: user.id };
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: await this.jwtService.signAsync(payload),
     };
   }
 }

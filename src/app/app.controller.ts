@@ -1,20 +1,28 @@
 import {
   Controller,
-  Request,
   Post,
   UseGuards,
   Get,
-  Body,
   HttpCode,
+  Req,
 } from '@nestjs/common';
-import { LocalAuthGuard } from '../auth/local-auth.guard';
+import { LocalAuthGuard } from '../auth/guards/local-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { AppService } from './app.service';
 import { Public } from 'src/auth/constants';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { LoginUserResponseDto } from 'src/auth/dto/login-user-response.dto';
-import { UserProfileDto } from 'src/auth/dto/user-profile.dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { UserLoginResponseDto } from 'src/auth/dto/user-login-response.dto';
+import { UserProfileResponseDto } from 'src/auth/dto/user-profile-response.dto';
+import { AuthenticatedRequest } from 'src/auth/interfaces/authenticated-request.interface';
+import { UserLoginRequestDto } from 'src/auth/dto/user-login-request.dto';
 
+@ApiTags('Autenticação')
 @Controller()
 export class AppController {
   constructor(
@@ -22,24 +30,44 @@ export class AppController {
     private readonly appService: AppService,
   ) {}
 
-  @ApiOperation({ summary: 'Realiza o Login do usuário com email e senha.' })
-  @ApiResponse({ status: 200, description: 'Sucesso no login.' })
-  @Public()
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  @HttpCode(200)
-  async login(@Request() req: object): Promise<LoginUserResponseDto> {
-    return this.authService.login(req.user);
-  }
-
   @Public()
   @Get()
   getHello(): string {
     return this.appService.getHello();
   }
 
+  @ApiBody({
+    description: 'Dados necessários para realizar o login.',
+    type: UserLoginRequestDto,
+  })
+  @ApiOperation({ summary: 'Realiza o Login do usuário com email e senha.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sucesso no login.',
+    type: UserLoginResponseDto,
+  })
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  @HttpCode(200)
+  async login(@Req() req: AuthenticatedRequest): Promise<UserLoginResponseDto> {
+    return this.authService.login(req.user);
+  }
+
+  @ApiOperation({
+    summary: 'Retorna informações do usuário com base no token.',
+  })
+  @ApiResponse({ status: 200, description: 'Dados retornados com sucesso.' })
+  @ApiBearerAuth()
   @Get('profile')
-  getProfile(@Request() req): Promise<UserProfileDto> {
-    return req.user;
+  getProfile(
+    @Req() req: AuthenticatedRequest,
+  ): Promise<UserProfileResponseDto> {
+    const profile: UserProfileResponseDto = {
+      id: req.user.id,
+      email: req.user.email,
+    };
+
+    return Promise.resolve(profile);
   }
 }

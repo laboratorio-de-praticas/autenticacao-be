@@ -6,7 +6,7 @@ import { User } from '../entities/user.entity';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { databaseConstants } from '../auth/constants';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 
 @Module({

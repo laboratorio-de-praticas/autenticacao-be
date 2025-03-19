@@ -20,6 +20,7 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('LP - Autenticação e Segurança')
     .setDescription(
       'API responsável pela autenticação do projeto Laboratório de Práticas',

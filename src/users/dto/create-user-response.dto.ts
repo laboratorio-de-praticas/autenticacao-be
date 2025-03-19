@@ -2,8 +2,8 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class CreateUserResponseDto {
   @IsNumber()
-  id: number;
+  readonly id: number;
 
   @IsString()
-  message: string;
+  readonly message: string;
 }
