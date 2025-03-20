@@ -4,7 +4,7 @@
 
   <p align="center">Laboratório de Práticas é de realização da <a href="https://fatecregistro.cps.sp.gov.br/" target="_blank">Fatec Registro</a> com o objetivo de acrescentar aos alunos um portfólio, e não menos importante, experiência (boas ou ruins).</p>
     <p align="center">
-<a href="https://www.instagram.com/fatecregistro/" target="_blank"><img src="https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=Instagram&logoColor=white" alt="NPM Version" /></a>
+<a href="https://www.instagram.com/fatecregistro/" target="_blank"><img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Fatec Registro Instagram" /></a>
 </p>
 
 <h1 align="center">Autenticação e Segurança</h1>
@@ -16,94 +16,155 @@ Projeto responsável por toda segurança dos projetos envolvidos no LP (Laborat�
 ## 🔧 Iniciando o projeto
 
 > [!IMPORTANT]
-> Key information users need to know to achieve their goal.
+> Antes mesmo de iniciar no projeto, é preciso realizar algumas configurações.
 
-Antes mesmo de iniciar no projeto, é preciso realizar algumas configurações:
-- Instalação do Postgres na máquina com o [Docker](https://www.docker.com/).
+- Instalação do _Postgres_ na máquina com o [Docker](https://www.docker.com/).
 - Criar _.env_ na raiz do projeto com as variáveis de ambiente.
 
-### Docker
-Após instalar o Docker na máquina tudo certinho, rode o seguinte comando:
+<details>
+
+<summary> 🐳 Sobre o Docker</summary>
+
+### 🐋 Instalando e configurando o Docker
+
+Vai lá no site deles e baixa ele direitinho, instala e reinicia o computador.
+
+Após instalar o Docker na máquina tudo certinho, rode o seguinte comando.
+
 ```bash
-$ docker run --name meu-postgres -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=meubanco -p 5432:5432 -d postgres
+   $ docker run --name meu-postgres -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=meubanco -p 5432:5432 -d postgres
 ```
+
 Esse comando vai inicializar um container do Postgres.
-#### 📌 Explicação dos parâmetros:
 
-- *-name meu-postgres*: Nome do container.
-- -e POSTGRES_USER=admin: Define o usuário do banco.
-- -e POSTGRES_PASSWORD=admin: Define a senha do banco.
-- -e POSTGRES_DB=meubanco: Nome do banco de dados inicial.
-- -p 5432:5432: Mapeia a porta do container para a máquina local.
-- -d postgres: Roda o container em segundo plano usando a imagem oficial do PostgreSQL.
+#### 📌 Explicação dos parâmetros se você estiver interessado:
 
+- `-name meu-postgres`: Nome do container.
+- `-e POSTGRES_USER=admin`: Define o usuário do banco.
+- `-e POSTGRES_PASSWORD=admin`: Define a senha do banco.
+- `-e POSTGRES_DB=meubanco`: Nome do banco de dados inicial.
+- `-p 5432:5432`: Mapeia a porta do container para a máquina local.
+- `-d postgres`: Roda o container em segundo plano usando a imagem oficial do PostgreSQL.
+</details>
+
+<details>
+
+<summary> 🥱 Variáveis de ambiente</summary>
+
+### 📂 Arquivo .env
+
+Sem muito segredo, crie na raiz do projeto um arquivo .env (sim, PONTO + env).
+Dentro do arquivo, insira as chaves
+
+```js
+DB_USER = nomeDoSeuUsuarioNoBanco;
+DB_PASSWORD = aSenhaDele;
+DB_NAME = nomeDoDatabase;
+DB_PORT = portaDoContainer;
+SECRET_KEY = aquiPodeSerQualquerCoisa;
+```
+
+</details>
+
+Após realizar as configurações acima, em teoria, as próximas etapas tem tudo para dar certo!
+
+### Instalando módulos
 
 ```bash
 $ npm install
 ```
 
-## Compile and run the project
+### Iniciando o projeto
 
 ```bash
-# development
+# desenvolvimento
 $ npm run start
 
-# watch mode
+# aquele hot reload legal
 $ npm run start:dev
 
-# production mode
+# para quando for em prod!
 $ npm run start:prod
 ```
 
-## Run tests
+### Rode os testes
 
 ```bash
-# unit tests
+# testes unitarios
 $ npm run test
 
-# e2e tests
+# testes e2e
 $ npm run test:e2e
 
-# test coverage
+# teste de cobertura
 $ npm run test:cov
 ```
+## 📚 Documentação
 
-## Deployment
+O projeto está utilizando o *Swagger* para a criação da documentação.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Se nada der errado no momento em que você rodar o projeto na sua máquina, você tem acesso a documentação pela URL:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+ ``http://localhost:3000/api#/``
 
-```bash
-$ npm install -g mau
-$ mau deploy
+> [!IMPORTANT]
+> Não deixe de documentar as rotas que você desenvolver!
+
+## 👨‍💻 Desenvolvimento
+
+Aqui estão algumas particularidades do código.
+
+> [!TIP]
+> Manter o padrão na criação de arquivos como dtos, interface, guards. Siga o exemplo do que já está no repositório! Isso também vale para variáveis e funções.
+
+<details>
+
+<summary>Uso do Guard <strong>JwtAuthGuard</strong></summary>
+
+### Todos os módulos devem configurar o uso global do JwtAuthGuard
+
+A intenção é que todas as rotas do seu módulo necessitem de um token.
+
+Exemplo do _users.module.ts_:
+```ts
+  @Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [
+    UsersService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
+  exports: [UsersService],
+  controllers: [UsersController],
+})
+```
+O que você deve fazer é apenas acrescentar a configuração abaixo no providers do módulo alvo:
+```ts
+  {
+    provide: APP_GUARD,
+    useClass: JwtAuthGuard,
+  }
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+</details>
 
-## Resources
+<details>
 
-Check out a few resources that may come in handy when working with NestJS:
+<summary>Decorator personalizado: <strong>@Public()</strong></summary>
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Decorator anti-token
 
-## Support
+O uso desse decorator faz com que a sua rota não necessite de um token (acho difícil você querer isso)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Exemplo do _app.controller.ts_:
+```ts
+  @Public()
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+```
+o _@Public()_ faz com que a mesma fique disponivel sem o uso de um token.
+</details>
