@@ -42,6 +42,18 @@ Esse comando vai inicializar um container do Postgres.
 - `-e POSTGRES_DB=meubanco`: Nome do banco de dados inicial.
 - `-p 5432:5432`: Mapeia a porta do container para a máquina local.
 - `-d postgres`: Roda o container em segundo plano usando a imagem oficial do PostgreSQL.
+
+Se o comando rodar sem nenhum aviso, explosão ou texto vermelho, provavelmente deu tudo certo e o container com o seu banco de dados já está pronto para ser acessado tanto pela API quanto por um SGDB de sua preferência.
+
+#### 🙄 Se você quer acessar o banco de dados:
+Se você não alterou nenhuma informação do comando, não tem segredo, só colocar elas no lugar certinho no momento da conexão.
+- Vou usar o DBeaver de exemplo:
+  
+  ![image](https://github.com/user-attachments/assets/45b33518-fa9e-40ff-aac7-232a0139ca3b)
+  
+  Inserindo as informações no devido lugar, não tem como dar errado. Na teoria.
+
+
 </details>
 
 <details>
@@ -136,9 +148,9 @@ Ao rodar o projeto em sua máquina, você tem acesso a documentação pela URL:
 
 ### Todos os módulos devem configurar o uso global do JwtAuthGuard
 
-A intenção é que todas as rotas do seu módulo necessitem de um token.
+A intenção é que todas as rotas do seu módulo necessitem de um token. Evita ter que adicionar o Guard individualmente para cada rota.
 
-Exemplo do _users.module.ts_:
+Exemplo do [_users.module.ts_](https://github.com/laboratorio-de-praticas/autenticacao-be/blob/bf1589cb3b6aa2f94bfdcaaf7f2cafa6fee21ea3/src/users/users.module.ts#L14):
 ```ts
   @Module({
   imports: [TypeOrmModule.forFeature([User])],
@@ -171,7 +183,7 @@ O que você deve fazer é apenas acrescentar a configuração abaixo no provider
 
 O uso desse decorator faz com que a sua rota não necessite de um _token_ (acho difícil você querer isso)
 
-Exemplo do _app.controller.ts_:
+Exemplo do [_app.controller.ts_](https://github.com/laboratorio-de-praticas/autenticacao-be/blob/bf1589cb3b6aa2f94bfdcaaf7f2cafa6fee21ea3/src/app/app.controller.ts#L41):
 ```ts
   @Public()
   @Get()
@@ -179,5 +191,6 @@ Exemplo do _app.controller.ts_:
     return this.appService.getHello();
   }
 ```
-o _@Public()_ faz com que a mesma fique disponivel sem o uso de um token.
+o _@Public()_ faz com que não seja necessário um _token_ para fazer requisição a essa rota.
+
 </details>
