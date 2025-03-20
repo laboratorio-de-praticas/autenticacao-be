@@ -6,9 +6,9 @@ import {
 import { User } from '../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/user-create.dto';
+import { UserCreateDto } from './dto/user-create.dto';
 import * as bcrypt from 'bcrypt';
-import { CreateUserResponseDto } from './dto/user-create-response.dto';
+import { UserCreateResponseDto } from './dto/user-create-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,8 +18,8 @@ export class UsersService {
   ) {}
 
   async createUser(
-    createUserDto: CreateUserDto,
-  ): Promise<CreateUserResponseDto> {
+    createUserDto: UserCreateDto,
+  ): Promise<UserCreateResponseDto> {
     const userExists = await this.usersRepository.findOneBy({
       email: createUserDto.email,
     });
