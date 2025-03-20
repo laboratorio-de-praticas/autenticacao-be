@@ -112,9 +112,24 @@ Ao rodar o projeto em sua máquina, você tem acesso a documentação pela URL:
 > Manter o padrão na criação de arquivos como dtos, interface, guards. Siga o exemplo do que já está no repositório! Isso também vale para variáveis e funções.
 
 - 💽 <strong>Nome</strong> de variáveis, arquivos, pastas, funções sempre em inglês.
+- - <strong>Retorno de _Exceptions_</strong> em inglês também? Não, pode retornar a mensagem em português.
 
-- ❗ <strong>Retorno de _Exceptions_</strong> em inglês também? Não, pode retornar a mensagem em português.
-
+- 🈺 Uso de <strong>prefixos explicítos</strong> nas rotas deixando claro o objetivo da mesma.
+- - Exemplos:
+  - - Ao invés de `POST /v1/user/`
+    - Tente `POST /v1/user/create/`
+ 
+- 🔢 Retorno semântico de <strong>_status code_</strong> com base na resposta da rota.
+- - Exemplos:
+  - - Ao invés de `POST /v1/user/create/ -> Response 200 OK`
+    - Tente `POST /v1/user/create/ -> Response 201 CREATED`
+ 
+- 🔞 Uso semântico dos <strong>métodos _HTTP_</strong> com base na ação da rota.
+- - Exemplos:
+  - - Ao invés de `GET /v1/user/delete/1 -> Response 204 NO CONTENT`
+    - Tente `DELETE /v1/user/delete/1 -> Response 204 NO CONTENT`
+   
+### Configurações e particularidades da API
 <details>
 
 <summary>Uso do Guard <strong>JwtAuthGuard</strong></summary>
