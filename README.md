@@ -18,12 +18,9 @@ Projeto responsável por toda segurança dos projetos envolvidos no LP (Laborat�
 > [!IMPORTANT]
 > Antes mesmo de iniciar no projeto, é preciso realizar algumas configurações.
 
-- Instalação do _Postgres_ na máquina com o [Docker](https://www.docker.com/).
-- Criar _.env_ na raiz do projeto com as variáveis de ambiente.
-
 <details>
 
-<summary> 🐳 Sobre o Docker</summary>
+<summary> 🐳 Configurando o Banco de Dados Postgres com o Docker</summary>
 
 ### 🐋 Instalando e configurando o Docker
 
@@ -87,7 +84,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-### Rode os testes
+### Rodando testes
 
 ```bash
 # testes unitarios
@@ -101,21 +98,22 @@ $ npm run test:cov
 ```
 ## 📚 Documentação
 
-O projeto está utilizando o *Swagger* para a criação da documentação.
-
-Se nada der errado no momento em que você rodar o projeto na sua máquina, você tem acesso a documentação pela URL:
-
- ``http://localhost:3000/api#/``
-
 > [!IMPORTANT]
 > Não deixe de documentar as rotas que você desenvolver!
 
+O projeto está utilizando o *Swagger* para a criação da documentação.
+
+Ao rodar o projeto em sua máquina, você tem acesso a documentação pela URL:
+
+ ``http://localhost:3000/api#/``
+
 ## 👨‍💻 Desenvolvimento
-
-Aqui estão algumas particularidades do código.
-
 > [!TIP]
 > Manter o padrão na criação de arquivos como dtos, interface, guards. Siga o exemplo do que já está no repositório! Isso também vale para variáveis e funções.
+
+- 💽 <strong>Nome</strong> de variáveis, arquivos, pastas, funções sempre em inglês.
+
+- ❗ <strong>Retorno de _Exceptions_</strong> em inglês também? Não, pode retornar a mensagem em português.
 
 <details>
 
@@ -156,7 +154,7 @@ O que você deve fazer é apenas acrescentar a configuração abaixo no provider
 
 ### Decorator anti-token
 
-O uso desse decorator faz com que a sua rota não necessite de um token (acho difícil você querer isso)
+O uso desse decorator faz com que a sua rota não necessite de um _token_ (acho difícil você querer isso)
 
 Exemplo do _app.controller.ts_:
 ```ts
