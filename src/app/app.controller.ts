@@ -36,11 +36,11 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @ApiOperation({ summary: 'Realiza o Login do usuário com email e senha.' })
   @ApiBody({
     description: 'Dados necessários para realizar o login.',
     type: UserLoginRequestDto,
   })
-  @ApiOperation({ summary: 'Realiza o Login do usuário com email e senha.' })
   @ApiResponse({
     status: 200,
     description: 'Sucesso no login.',
@@ -57,7 +57,11 @@ export class AppController {
   @ApiOperation({
     summary: 'Retorna informações do usuário com base no token.',
   })
-  @ApiResponse({ status: 200, description: 'Dados retornados com sucesso.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Dados retornados com sucesso.',
+    type: UserProfileResponseDto,
+  })
   @ApiBearerAuth()
   @Get('profile')
   getProfile(
