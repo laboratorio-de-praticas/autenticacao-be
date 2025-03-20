@@ -29,7 +29,7 @@ async function bootstrap() {
     .addBearerAuth()
     .setTitle('LP - Autenticação e Segurança')
     .setDescription(
-      'API responsável pela autenticação do projeto Laboratório de Práticas',
+      'API responsável pela autenticação do projeto Laboratório de Práticas.',
     )
     .setVersion('1.0')
     .build();
