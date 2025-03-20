@@ -1,10 +1,14 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/user-create.dto';
 import * as bcrypt from 'bcrypt';
-import { CreateUserResponseDto } from './dto/create-user-response.dto';
+import { CreateUserResponseDto } from './dto/user-create-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +24,7 @@ export class UsersService {
       email: createUserDto.email,
     });
     if (userExists) {
-      throw new ConflictException("Este e-mail já está cadastrado.");
+      throw new ConflictException('Este e-mail já está cadastrado.');
     }
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
