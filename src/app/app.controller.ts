@@ -30,6 +30,14 @@ export class AppController {
     private readonly appService: AppService,
   ) {}
 
+  @ApiOperation({ summary: 'Hello Word da API.' })
+  @ApiResponse({
+    status: 200,
+    description: 'A API está de pé!.',
+    schema: {
+      example: 'Hello Word!',
+    },
+  })
   @Public()
   @Get()
   getHello(): string {
