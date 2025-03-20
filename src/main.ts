@@ -12,7 +12,13 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: false,
+    }),
+  );
 
   app.enableVersioning({
     defaultVersion: '1',
