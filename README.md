@@ -2,7 +2,7 @@
   <a href="https://fatecregistro.cps.sp.gov.br/" target="blank"><img src="https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/40/2024/03/fatec_registro.png" width="300" alt="Fatec Logo" /></a>
 </p>
 
-  <p align="center">Laboratório de Práticas é de realização da <a href="https://fatecregistro.cps.sp.gov.br/" target="_blank">Fatec Registro</a> com o objetivo de acrescentar aos alunos um portfólio, e não menos importante, experiência (boas ou ruins).</p>
+  <p align="center">Laboratório de Práticas é de realização da <a href="https://fatecregistro.cps.sp.gov.br/" target="_blank">Fatec Registro</a> com o objetivo de acrescentar aos alunos um portfólio, e não menos importante, experiência!</p>
     <p align="center">
 <a href="https://www.instagram.com/fatecregistro/" target="_blank"><img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Fatec Registro Instagram" /></a>
 </p>
@@ -12,6 +12,22 @@
 ## 📋 Descrição
 
 Projeto responsável por toda segurança dos projetos envolvidos no LP (Laboratório de Práticas).
+
+## 👔 Principais tecnologias utilizadas
+
+* [![TypeORM](https://img.shields.io/badge/TypeORM-FE0803?logo=typeorm&logoColor=fff)](https://typeorm.io/)
+* [![Typescript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+* [![Jest](https://img.shields.io/badge/Jest-323330?style=for-the-badge&logo=Jest&logoColor=white)](https://jestjs.io/pt-BR/)
+* [![Next.js](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nestjs.com/)
+* [![Node.js](https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white)](https://nodejs.org/pt)
+* [![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)](https://swagger.io/)
+* [![Passport.js](https://img.shields.io/badge/Passport.js-24a357?style=for-the-badge&logo=passport&logoColor=white)](https://www.passportjs.org/)
+
+### Outros pacotes não menos importantes
+* [Bcrypt](https://www.npmjs.com/package/bcrypt)
+* [class-validator](https://www.npmjs.com/package/class-validator)
+* [class-transformer](https://www.npmjs.com/package/class-transformer)
+* [dotenv](https://www.npmjs.com/package/dotenv)
 
 ## 🔧 Iniciando o projeto
 
@@ -45,13 +61,13 @@ Esse comando vai inicializar um container do Postgres.
 
 Se o comando rodar sem nenhum aviso, explosão ou texto vermelho, provavelmente deu tudo certo e o container com o seu banco de dados já está pronto para ser acessado tanto pela API quanto por um SGDB de sua preferência.
 
-#### 🙄 Se você quer acessar o banco de dados:
+#### 🙄 Se você quer acessar o banco de dados por um SGBD:
 Se você não alterou nenhuma informação do comando, não tem segredo, só colocar elas no lugar certinho no momento da conexão.
 - Vou usar o DBeaver de exemplo:
   
   ![image](https://github.com/user-attachments/assets/45b33518-fa9e-40ff-aac7-232a0139ca3b)
   
-  Inserindo as informações no devido lugar, não tem como dar errado. Na teoria.
+  Inserindo as informações no devido lugar, não tem como dar errado (em teoria).
 
 
 </details>
@@ -71,7 +87,7 @@ DB_PASSWORD = aSenhaDele;
 DB_NAME = nomeDoDatabase;
 DB_PORT = portaDoContainer;
 SECRET_KEY = aquiPodeSerQualquerCoisa;
-WHITELIST_DOMAIN = qualquerDominioParaTeste;
+WHITELIST_DOMAIN = qualquerDominioDeEmailLiberado;
 ```
 
 </details>
@@ -123,19 +139,19 @@ Ao rodar o projeto em sua máquina, você tem acesso a documentação pela URL:
  ### Fluxograma de funcionamento da API
  ```mermaid
 flowchart LR
-    A["User"] -- POST /v1/auth/login ---> rectId["API"]
+    A["Internal client"] -- POST /v1/auth/login ---> rectId["API"]
     A -- Requests with Bearer Token --> paraRevId["API"]
     paraRevId -- Token --> route["Protected Routes"] & route1["Protected Routes"] & route3["Protected Routes"]
     rectId -- Capture email and password --> B["AuthGuard"]
     B --> n1["Verify Input"]
     n1 --> decisionId{"Valid?"}
-    decisionId -- No --> E["Identify the wrong inputs"]
+    decisionId -- No --> E["Get wrong inputs"]
     decisionId -- Yes --> D["LocalStrategy"]
     D --> hexId["User exists and credentials are valid?"]
     hexId -. "Find user by e-mail" .- db["Postgres"]
     hexId -. Compare body password with hash password .- n3["Bcrypt"]
     hexId -- Yes --> dbId["Generate JWT Token"]
-    hexId -- No --> doubleCircleId["Identify the problem"]
+    hexId -- No --> doubleCircleId["Throw exception"]
     E -- 400 Bad Request --> A
     doubleCircleId -- 401 Unauthorized --> A
     dbId -- 200 OK {access_token} --> A
@@ -145,16 +161,21 @@ flowchart LR
     route@{ shape: lin-proc}
     route1@{ shape: lin-proc}
     route3@{ shape: lin-proc}
-    B@{ shape: subproc}
+    B@{ shape: proc}
     n1@{ shape: tag-proc}
-    E@{ shape: proc}
-    D@{ shape: subproc}
+    E@{ shape: subproc}
+    D@{ shape: proc}
     hexId@{ shape: diam}
     db@{ shape: db}
-    n3@{ shape: proc}
+    n3@{ shape: subproc}
     dbId@{ shape: rounded}
     doubleCircleId@{ shape: rect}
 ```
+Legenda:
+* <strong>AuthGuard</strong> é quem vai interceptar a requisição (como se fosse um middleware) para verificar e definir se os inputs provindos do body são válidos. [Leia mais sobre Guards na documentação do Nest.js](https://docs.nestjs.com/guards)
+* <strong>LocalStrategy</strong> é a estratégia de autenticação escolhida. Se da pelo uso de um email e senha para a autenticação. [Leia mais sobre a local-strategy na documentação do Passport.js](https://www.passportjs.org/packages/passport-local/)
+
+_Fluxo para clientes externos em desenvolvimento._
 
 ## 👨‍💻 Desenvolvimento
 > [!TIP]
