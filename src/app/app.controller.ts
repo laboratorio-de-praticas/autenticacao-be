@@ -78,6 +78,7 @@ export class AppController {
     const profile: UserProfileResponseDto = {
       id: req.user.id,
       email: req.user.email,
+      isActive: req.user.isActive,
     };
 
     return Promise.resolve(profile);

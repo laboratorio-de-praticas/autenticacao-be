@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNumber } from 'class-validator';
+import { IsBoolean, IsEmail, IsNumber } from 'class-validator';
 
 export class UserProfileResponseDto {
   @ApiProperty({
@@ -15,4 +15,11 @@ export class UserProfileResponseDto {
   })
   @IsEmail()
   email: string;
+
+  @ApiProperty({
+    description: 'Booleano sobre o usuário estar ativo ou não.',
+    example: true,
+  })
+  @IsBoolean()
+  isActive: boolean;
 }
