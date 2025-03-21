@@ -120,6 +120,42 @@ Ao rodar o projeto em sua máquina, você tem acesso a documentação pela URL:
 
  ``http://localhost:3000/api#/``
 
+ ### Fluxograma de funcionamento da API
+ ```mermaid
+flowchart LR
+    A["User"] -- POST /v1/auth/login ---> rectId["API"]
+    A -- Requests with Bearer Token --> paraRevId["API"]
+    paraRevId -- Token --> route["Protected Routes"] & route1["Protected Routes"] & route3["Protected Routes"]
+    rectId -- Capture email and password --> B["AuthGuard"]
+    B --> n1["Verify Input"]
+    n1 --> decisionId{"Valid?"}
+    decisionId -- No --> E["Identify the wrong inputs"]
+    decisionId -- Yes --> D["LocalStrategy"]
+    D --> hexId["User exists and credentials are valid?"]
+    hexId -. "Find user by e-mail" .- db["Postgres"]
+    hexId -. Compare body password with hash password .- n3["Bcrypt"]
+    hexId -- Yes --> dbId["Generate JWT Token"]
+    hexId -- No --> doubleCircleId["Identify the problem"]
+    E -- 400 Bad Request --> A
+    doubleCircleId -- 401 Unauthorized --> A
+    dbId -- 200 OK {access_token} --> A
+
+    rectId@{ shape: procs}
+    paraRevId@{ shape: procs}
+    route@{ shape: lin-proc}
+    route1@{ shape: lin-proc}
+    route3@{ shape: lin-proc}
+    B@{ shape: subproc}
+    n1@{ shape: tag-proc}
+    E@{ shape: proc}
+    D@{ shape: subproc}
+    hexId@{ shape: diam}
+    db@{ shape: db}
+    n3@{ shape: proc}
+    dbId@{ shape: rounded}
+    doubleCircleId@{ shape: rect}
+```
+
 ## 👨‍💻 Desenvolvimento
 > [!TIP]
 > Manter o padrão na criação de arquivos como dtos, interface, guards. Siga o exemplo do que já está no repositório! Isso também vale para variáveis e funções.
