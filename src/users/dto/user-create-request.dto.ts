@@ -1,16 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-export class UserCreateDto {
+export class UserCreateRequestDto {
   @ApiProperty({
     description: 'E-mail do usuário.',
     example: 'usuario@fatec.sp.gov.br',
   })
+  @IsNotEmpty({ message: 'O e-mail não pode estar vazio.' })
   @IsEmail(
     { host_whitelist: [`${process.env.WHITELIST_DOMAIN}`] },
-    { message: 'Insira um e-mail válido do domínio fatec.sp.gov.br' },
+    { message: 'Insira um e-mail válido.' },
   )
   readonly email: string;
 
@@ -18,6 +19,6 @@ export class UserCreateDto {
     description: 'Senha.',
     example: 'eng.u1i231ca',
   })
-  @IsString()
+  @IsNotEmpty({ message: 'A senha não pode estar vazia.' })
   readonly password: string;
 }

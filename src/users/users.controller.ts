@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { UserCreateDto } from './dto/user-create.dto';
+import { UserCreateRequestDto } from './dto/user-create-request.dto';
 import { UserCreateResponseDto } from './dto/user-create-response.dto';
 import { UsersService } from './users.service';
 import { Public } from 'src/auth/constants';
@@ -13,7 +13,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Criação do usuário.' })
   @ApiBody({
     description: 'Dados necessários para realizar o cadastro do usuário.',
-    type: UserCreateDto,
+    type: UserCreateRequestDto,
   })
   @ApiResponse({
     status: 200,
@@ -23,8 +23,8 @@ export class UsersController {
   @Public()
   @Post('create')
   async createUser(
-    @Body() userCreateDto: UserCreateDto,
+    @Body() userCreateRequestDto: UserCreateRequestDto,
   ): Promise<UserCreateResponseDto> {
-    return this.usersService.createUser(userCreateDto);
+    return this.usersService.createUser(userCreateRequestDto);
   }
 }
