@@ -1,12 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export class UserCreateDto {
   @ApiProperty({
     description: 'E-mail do usuário.',
-    example: 'usuario@dominio.com',
+    example: 'usuario@fatec.sp.gov.br',
   })
-  @IsEmail()
+  @IsEmail(
+    { host_whitelist: [`${process.env.WHITELIST_DOMAIN}`] },
+    { message: 'Insira um e-mail válido do domínio fatec.sp.gov.br' },
+  )
   readonly email: string;
 
   @ApiProperty({
