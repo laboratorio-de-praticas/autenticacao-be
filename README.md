@@ -71,6 +71,7 @@ DB_PASSWORD = aSenhaDele;
 DB_NAME = nomeDoDatabase;
 DB_PORT = portaDoContainer;
 SECRET_KEY = aquiPodeSerQualquerCoisa;
+WHITELIST_DOMAIN = qualquerDominioParaTeste;
 ```
 
 </details>
