@@ -21,6 +21,7 @@ import { UserLoginResponseDto } from 'src/auth/dto/user-login-response.dto';
 import { UserProfileResponseDto } from 'src/auth/dto/user-profile-response.dto';
 import { AuthenticatedRequest } from 'src/auth/interfaces/authenticated-request.interface';
 import { UserLoginRequestDto } from 'src/auth/dto/user-login-request.dto';
+import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
 
 @ApiTags('Autenticação')
 @Controller()
@@ -74,13 +75,7 @@ export class AppController {
   @Get('profile')
   getProfile(
     @Req() req: AuthenticatedRequest,
-  ): Promise<UserProfileResponseDto> {
-    const profile: UserProfileResponseDto = {
-      id: req.user.id,
-      email: req.user.email,
-      isActive: req.user.isActive,
-    };
-
-    return Promise.resolve(profile);
+  ): JwtPayload {
+    return req.user;
   }
 }
