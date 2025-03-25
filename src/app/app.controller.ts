@@ -73,9 +73,7 @@ export class AppController {
   })
   @ApiBearerAuth()
   @Get('profile')
-  getProfile(
-    @Req() req: AuthenticatedRequest,
-  ): JwtPayload {
+  getProfile(@Req() req: AuthenticatedRequest): JwtPayload {
     return req.user;
   }
 }

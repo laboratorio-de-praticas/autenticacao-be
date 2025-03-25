@@ -14,7 +14,9 @@ import { APP_GUARD } from '@nestjs/core';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: databaseConstants.port,
+      port: databaseConstants.port
+        ? parseInt(databaseConstants.port, 10)
+        : undefined,
       username: databaseConstants.username,
       password: databaseConstants.password,
       database: databaseConstants.database,

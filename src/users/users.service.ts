@@ -1,12 +1,8 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserCreateDto } from './dto/user-create-request.dto';
+import { UserCreateRequestDto } from './dto/user-create-request.dto';
 import * as bcrypt from 'bcrypt';
 import { UserCreateResponseDto } from './dto/user-create-response.dto';
 
@@ -18,7 +14,7 @@ export class UsersService {
   ) {}
 
   async createUser(
-    createUserDto: UserCreateDto,
+    createUserDto: UserCreateRequestDto,
   ): Promise<UserCreateResponseDto> {
     const userExists = await this.usersRepository.findOneBy({
       email: createUserDto.email,
