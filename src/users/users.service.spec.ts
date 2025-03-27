@@ -37,9 +37,9 @@ describe('UsersService', () => {
 
     service = module.get<UsersService>(UsersService);
 
-    mockUsersRepository.findOneBy = jest.fn();
-    mockUsersRepository.create = jest.fn();
-    mockUsersRepository.save = jest.fn();
+    mockUsersRepository.findOneBy.mockReset();
+    mockUsersRepository.create.mockReset();
+    mockUsersRepository.save.mockReset();
   });
 
   afterEach(() => {
