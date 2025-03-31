@@ -19,7 +19,9 @@ export class LocalAuthGuard extends AuthGuard('local') {
     const errors = await validate(userLoginRequestDto);
     if (errors.length > 0) {
       const formattedErrors = errors.map((err) =>
-        Object.values(err.constraints).join(' '),
+        err.constraints
+          ? Object.values(err.constraints).join(' ')
+          : 'Validation error',
       );
 
       throw new BadRequestException({

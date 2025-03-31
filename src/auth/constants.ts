@@ -6,7 +6,7 @@ export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 export const jwtConstants = {
-  secret: process.env.SECRET_KEY,
+  secret: process.env.SECRET_KEY || 'defaultSecretKey',
 };
 
 export const databaseConstants = {
@@ -14,4 +14,4 @@ export const databaseConstants = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-}
+};
