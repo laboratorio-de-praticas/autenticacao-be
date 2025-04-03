@@ -2,7 +2,7 @@ import { UsersService } from './users.service';
 import { User } from 'src/entities/user.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 describe('UsersService', () => {
@@ -10,8 +10,12 @@ describe('UsersService', () => {
 
   const mockUsersRepository = {
     findOneBy: jest.fn(),
+    find: jest.fn(),
+    findOne: jest.fn(),
     create: jest.fn(),
     save: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
   };
 
   const createUserDto = { email: 'test@example.com', password: 'password123' };
@@ -37,12 +41,6 @@ describe('UsersService', () => {
 
     service = module.get<UsersService>(UsersService);
 
-    mockUsersRepository.findOneBy.mockReset();
-    mockUsersRepository.create.mockReset();
-    mockUsersRepository.save.mockReset();
-  });
-
-  afterEach(() => {
     jest.clearAllMocks();
   });
 
@@ -50,64 +48,84 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('createUser', () => {
-    it('should throw ConflictException if user already exists', async () => {
-      mockUsersRepository.findOneBy.mockResolvedValue(existingUser);
+  describe('findAll', () => {
+    it('should return all users', async () => {
+      const users = [existingUser];
+      mockUsersRepository.find.mockResolvedValue(users);
 
-      await expect(service.createUser(createUserDto)).rejects.toThrow(
-        ConflictException,
-      );
-      expect(mockUsersRepository.findOneBy).toHaveBeenCalledWith({
-        email: createUserDto.email,
-      });
-    });
+      const result = await service.findAll();
 
-    it('should create a new user', async () => {
-      mockUsersRepository.findOneBy.mockResolvedValue(null);
-      mockUsersRepository.create.mockReturnValue(existingUser);
-      mockUsersRepository.save.mockResolvedValue(existingUser);
-      jest
-        .spyOn(bcrypt, 'hash')
-        .mockResolvedValue(existingUser.password as never);
-
-      const result = await service.createUser(createUserDto);
-
-      expect(mockUsersRepository.findOneBy).toHaveBeenCalledWith({
-        email: createUserDto.email,
-      });
-      expect(mockUsersRepository.create).toHaveBeenCalledWith({
-        email: createUserDto.email,
-        password: existingUser.password,
-      });
-      expect(mockUsersRepository.save).toHaveBeenCalledWith(existingUser);
-      expect(result).toEqual({
-        id: existingUser.id,
-        message: 'Usuário criado com sucesso.',
-      });
+      expect(mockUsersRepository.find).toHaveBeenCalled();
+      expect(result).toEqual(users);
     });
   });
 
-  describe('findByEmail', () => {
-    it('should return a user by email', async () => {
-      mockUsersRepository.findOneBy.mockResolvedValue(existingUser);
+  describe('findOne', () => {
+    it('should return a user by ID', async () => {
+      mockUsersRepository.findOne.mockResolvedValue(existingUser);
 
-      const result = await service.findByEmail(existingUser.email);
+      const result = await service.findOne(existingUser.id);
 
-      expect(mockUsersRepository.findOneBy).toHaveBeenCalledWith({
-        email: existingUser.email,
+      expect(mockUsersRepository.findOne).toHaveBeenCalledWith({
+        where: { id: existingUser.id },
       });
       expect(result).toEqual(existingUser);
     });
 
-    it('should return null if user not found', async () => {
-      mockUsersRepository.findOneBy.mockResolvedValue(null);
+    it('should throw NotFoundException if user not found', async () => {
+      mockUsersRepository.findOne.mockResolvedValue(null);
 
-      const result = await service.findByEmail(existingUser.email);
-
-      expect(mockUsersRepository.findOneBy).toHaveBeenCalledWith({
-        email: existingUser.email,
+      await expect(service.findOne(existingUser.id)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(mockUsersRepository.findOne).toHaveBeenCalledWith({
+        where: { id: existingUser.id },
       });
-      expect(result).toBeNull();
     });
   });
-});
+
+  describe('updateUser', () => {
+    it('should update a user', async () => {
+      const updateDto = { email: 'updated@example.com', password: 'newpass123' };
+      const updatedUser = { ...existingUser, ...updateDto };
+
+      mockUsersRepository.findOne.mockResolvedValue(existingUser);
+      mockUsersRepository.findOneBy.mockResolvedValue(null);
+      mockUsersRepository.update.mockResolvedValue(updatedUser);
+      jest.spyOn(bcrypt, 'hash').mockResolvedValue(Promise.resolve('hashedPassword') as never);
+
+
+      const result = await service.updateUser(existingUser.id, updateDto);
+
+      expect(mockUsersRepository.findOne).toHaveBeenCalledWith({
+        where: { id: existingUser.id },
+      });
+      expect(mockUsersRepository.update).toHaveBeenCalledWith(existingUser.id, {
+        email: updateDto.email,
+        password: 'hashedPassword',
+      });
+      expect(result).toEqual({ id: existingUser.id, message: 'Usuário atualizado com sucesso.' });
+    });
+
+    describe('deleteUser', () => {
+      it('should delete a user', async () => {
+        mockUsersRepository.findOne.mockResolvedValue(existingUser);
+        mockUsersRepository.delete.mockResolvedValue(undefined);
+
+        await expect(service.deleteUser(existingUser.id)).resolves.not.toThrow();
+        expect(mockUsersRepository.findOne).toHaveBeenCalledWith({
+          where: { id: existingUser.id },
+        });
+        expect(mockUsersRepository.delete).toHaveBeenCalledWith(existingUser.id);
+      });
+
+      it('should throw NotFoundException if user not found', async () => {
+        mockUsersRepository.findOne.mockResolvedValue(null);
+
+        await expect(service.deleteUser(existingUser.id)).rejects.toThrow(
+          NotFoundException,
+        );
+      });
+    });
+  });
+})

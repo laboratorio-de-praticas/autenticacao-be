@@ -17,6 +17,8 @@ describe('AppController', () => {
 
   const mockUser = { id: 1, email: 'test@example.com', isActive: true };
 
+
+  
   const mockLoginResponse = { accessToken: 'token' };
 
   beforeEach(async () => {
