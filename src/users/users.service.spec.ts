@@ -86,14 +86,18 @@ describe('UsersService', () => {
 
   describe('updateUser', () => {
     it('should update a user', async () => {
-      const updateDto = { email: 'updated@example.com', password: 'newpass123' };
+      const updateDto = {
+        email: 'updated@example.com',
+        password: 'newpass123',
+      };
       const updatedUser = { ...existingUser, ...updateDto };
 
       mockUsersRepository.findOne.mockResolvedValue(existingUser);
       mockUsersRepository.findOneBy.mockResolvedValue(null);
       mockUsersRepository.update.mockResolvedValue(updatedUser);
-      jest.spyOn(bcrypt, 'hash').mockResolvedValue(Promise.resolve('hashedPassword') as never);
-
+      jest
+        .spyOn(bcrypt, 'hash')
+        .mockResolvedValue(Promise.resolve('hashedPassword') as never);
 
       const result = await service.updateUser(existingUser.id, updateDto);
 
@@ -104,7 +108,10 @@ describe('UsersService', () => {
         email: updateDto.email,
         password: 'hashedPassword',
       });
-      expect(result).toEqual({ id: existingUser.id, message: 'Usuário atualizado com sucesso.' });
+      expect(result).toEqual({
+        id: existingUser.id,
+        message: 'Usuário atualizado com sucesso.',
+      });
     });
 
     describe('deleteUser', () => {
@@ -112,11 +119,15 @@ describe('UsersService', () => {
         mockUsersRepository.findOne.mockResolvedValue(existingUser);
         mockUsersRepository.delete.mockResolvedValue(undefined);
 
-        await expect(service.deleteUser(existingUser.id)).resolves.not.toThrow();
+        await expect(
+          service.deleteUser(existingUser.id),
+        ).resolves.not.toThrow();
         expect(mockUsersRepository.findOne).toHaveBeenCalledWith({
           where: { id: existingUser.id },
         });
-        expect(mockUsersRepository.delete).toHaveBeenCalledWith(existingUser.id);
+        expect(mockUsersRepository.delete).toHaveBeenCalledWith(
+          existingUser.id,
+        );
       });
 
       it('should throw NotFoundException if user not found', async () => {
@@ -128,4 +139,4 @@ describe('UsersService', () => {
       });
     });
   });
-})
+});

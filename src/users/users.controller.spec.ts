@@ -18,7 +18,6 @@ describe('UsersController', () => {
     deleteUser: jest.fn(),
   };
 
-
   const userCreateRequestDto: UserCreateRequestDto = {
     email: 'test@example.com',
     password: 'password123',
@@ -93,16 +92,20 @@ describe('UsersController', () => {
         message: 'Usuário atualizado com sucesso.',
       });
 
-      const result = await controller.updateUser(existingUser.id, userUpdateRequestDto);
+      const result = await controller.updateUser(
+        existingUser.id,
+        userUpdateRequestDto,
+      );
 
       expect(result).toEqual({
         id: existingUser.id,
         message: 'Usuário atualizado com sucesso.',
       });
-      expect(usersService.updateUser).toHaveBeenCalledWith(existingUser.id, userUpdateRequestDto);
+      expect(usersService.updateUser).toHaveBeenCalledWith(
+        existingUser.id,
+        userUpdateRequestDto,
+      );
     });
-
-
 
     describe('deleteUser', () => {
       it('should delete a user', async () => {
@@ -112,5 +115,5 @@ describe('UsersController', () => {
         expect(usersService.deleteUser).toHaveBeenCalledWith(existingUser.id);
       });
     });
-  })
-})
+  });
+});

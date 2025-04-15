@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,7 +17,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async createUser(
     createUserDto: UserCreateRequestDto,
@@ -60,7 +64,9 @@ export class UsersService {
 
     // Verifica se o e-mail está sendo atualizado e se já existe
     if (dto.email && dto.email !== user.email) {
-      const userExists = await this.usersRepository.findOneBy({ email: dto.email });
+      const userExists = await this.usersRepository.findOneBy({
+        email: dto.email,
+      });
       if (userExists) {
         throw new ConflictException('Este e-mail já está em uso.');
       }

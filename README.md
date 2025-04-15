@@ -15,19 +15,20 @@ Projeto responsável por toda segurança dos projetos envolvidos no LP (Laborat�
 
 ## 👔 Principais tecnologias utilizadas
 
-* [![TypeORM](https://img.shields.io/badge/TypeORM-FE0803?logo=typeorm&logoColor=fff)](https://typeorm.io/)
-* [![Typescript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-* [![Nest.js](https://img.shields.io/badge/-NestJs-ea2845?style=flat-square&logo=nestjs&logoColor=white)](https://nestjs.com/)
-* [![Jest](https://img.shields.io/badge/Jest-323330?style=for-the-badge&logo=Jest&logoColor=white)](https://jestjs.io/pt-BR/)
-* [![Node.js](https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white)](https://nodejs.org/pt)
-* [![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)](https://swagger.io/)
-* [![Passport.js](https://img.shields.io/badge/Passport.js-24a357?style=for-the-badge&logo=passport&logoColor=white)](https://www.passportjs.org/)
+- [![TypeORM](https://img.shields.io/badge/TypeORM-FE0803?logo=typeorm&logoColor=fff)](https://typeorm.io/)
+- [![Typescript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+- [![Nest.js](https://img.shields.io/badge/-NestJs-ea2845?style=flat-square&logo=nestjs&logoColor=white)](https://nestjs.com/)
+- [![Jest](https://img.shields.io/badge/Jest-323330?style=for-the-badge&logo=Jest&logoColor=white)](https://jestjs.io/pt-BR/)
+- [![Node.js](https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white)](https://nodejs.org/pt)
+- [![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)](https://swagger.io/)
+- [![Passport.js](https://img.shields.io/badge/Passport.js-24a357?style=for-the-badge&logo=passport&logoColor=white)](https://www.passportjs.org/)
 
 ### Outros pacotes não menos importantes
-* [Bcrypt](https://www.npmjs.com/package/bcrypt)
-* [class-validator](https://www.npmjs.com/package/class-validator)
-* [class-transformer](https://www.npmjs.com/package/class-transformer)
-* [dotenv](https://www.npmjs.com/package/dotenv)
+
+- [Bcrypt](https://www.npmjs.com/package/bcrypt)
+- [class-validator](https://www.npmjs.com/package/class-validator)
+- [class-transformer](https://www.npmjs.com/package/class-transformer)
+- [dotenv](https://www.npmjs.com/package/dotenv)
 
 ## 🔧 Iniciando o projeto
 
@@ -62,13 +63,14 @@ Esse comando vai inicializar um container do Postgres.
 Se o comando rodar sem nenhum aviso, explosão ou texto vermelho, provavelmente deu tudo certo e o container com o seu banco de dados já está pronto para ser acessado tanto pela API quanto por um SGDB de sua preferência.
 
 #### 🙄 Se você quer acessar o banco de dados por um SGBD:
-Se você não alterou nenhuma informação do comando, não tem segredo, só colocar elas no lugar certinho no momento da conexão.
-- Vou usar o DBeaver de exemplo:
-  
-  ![image](https://github.com/user-attachments/assets/45b33518-fa9e-40ff-aac7-232a0139ca3b)
-  
-  Inserindo as informações no devido lugar, não tem como dar errado (em teoria).
 
+Se você não alterou nenhuma informação do comando, não tem segredo, só colocar elas no lugar certinho no momento da conexão.
+
+- Vou usar o DBeaver de exemplo:
+
+  ![image](https://github.com/user-attachments/assets/45b33518-fa9e-40ff-aac7-232a0139ca3b)
+
+  Inserindo as informações no devido lugar, não tem como dar errado (em teoria).
 
 </details>
 
@@ -125,59 +127,64 @@ $ npm run test:e2e
 # teste de cobertura
 $ npm run test:cov
 ```
+
 ## 📚 Documentação
 
 > [!IMPORTANT]
 > Não deixe de documentar as rotas que você desenvolver!
 
-O projeto está utilizando o *Swagger* para a criação da documentação.
+O projeto está utilizando o _Swagger_ para a criação da documentação.
 
 Ao rodar o projeto em sua máquina, você tem acesso a documentação pela URL:
 
- ``http://localhost:3000/api#/``
+`http://localhost:3000/api/`
 
- ### Fluxograma de funcionamento da API
- ```mermaid
+### Fluxograma de funcionamento da API
+
+```mermaid
 flowchart LR
-    A["Internal client"] -- POST /v1/auth/login ---> rectId["API"]
-    A -- Requests with Bearer Token --> paraRevId["API"]
-    paraRevId -- Token --> route["Protected Routes"] & route1["Protected Routes"] & route3["Protected Routes"]
-    rectId -- Capture email and password --> B["AuthGuard"]
-    B --> n1["Verify Input"]
-    n1 --> decisionId{"Valid?"}
-    decisionId -- No --> E["Get wrong inputs"]
-    decisionId -- Yes --> D["LocalStrategy"]
-    D --> hexId["User exists and credentials are valid?"]
-    hexId -. "Find user by e-mail" .- db["Postgres"]
-    hexId -. Compare body password with hash password .- n3["Bcrypt"]
-    hexId -- Yes --> dbId["Generate JWT Token"]
-    hexId -- No --> doubleCircleId["Throw exception"]
-    E -- 400 Bad Request --> A
-    doubleCircleId -- 401 Unauthorized --> A
-    dbId -- 200 OK {access_token} --> A
+   A["Internal client"] -- POST /v1/auth/login ---> rectId["API"]
+   A -- Requests with Bearer Token --> paraRevId["API"]
+   paraRevId -- Token --> route["Protected Routes"] & route1["Protected Routes"] & route3["Protected Routes"]
+   rectId -- Capture email and password --> B["AuthGuard"]
+   B --> n1["Verify Input"]
+   n1 --> decisionId{"Valid?"}
+   decisionId -- No --> E["Get wrong inputs"]
+   decisionId -- Yes --> D["LocalStrategy"]
+   D --> hexId["User exists and credentials are valid?"]
+   hexId -. "Find user by e-mail" .- db["Postgres"]
+   hexId -. Compare body password with hash password .- n3["Bcrypt"]
+   hexId -- Yes --> dbId["Generate JWT Token"]
+   hexId -- No --> doubleCircleId["Throw exception"]
+   E -- 400 Bad Request --> A
+   doubleCircleId -- 401 Unauthorized --> A
+   dbId -- 200 OK {access_token} --> A
 
-    rectId@{ shape: procs}
-    paraRevId@{ shape: procs}
-    route@{ shape: lin-proc}
-    route1@{ shape: lin-proc}
-    route3@{ shape: lin-proc}
-    B@{ shape: proc}
-    n1@{ shape: tag-proc}
-    E@{ shape: subproc}
-    D@{ shape: proc}
-    hexId@{ shape: diam}
-    db@{ shape: db}
-    n3@{ shape: subproc}
-    dbId@{ shape: rounded}
-    doubleCircleId@{ shape: rect}
+   rectId@{ shape: procs}
+   paraRevId@{ shape: procs}
+   route@{ shape: lin-proc}
+   route1@{ shape: lin-proc}
+   route3@{ shape: lin-proc}
+   B@{ shape: proc}
+   n1@{ shape: tag-proc}
+   E@{ shape: subproc}
+   D@{ shape: proc}
+   hexId@{ shape: diam}
+   db@{ shape: db}
+   n3@{ shape: subproc}
+   dbId@{ shape: rounded}
+   doubleCircleId@{ shape: rect}
 ```
+
 Legenda:
-* <strong>AuthGuard</strong> é quem vai interceptar a requisição (como se fosse um middleware) para verificar e definir se os inputs provindos do body são válidos. [Leia mais sobre Guards na documentação do Nest.js](https://docs.nestjs.com/guards)
-* <strong>LocalStrategy</strong> é a estratégia de autenticação escolhida. Se da pelo uso de um email e senha para a autenticação. [Leia mais sobre a local-strategy na documentação do Passport.js](https://www.passportjs.org/packages/passport-local/)
+
+- <strong>AuthGuard</strong> é quem vai interceptar a requisição (como se fosse um middleware) para verificar e definir se os inputs provindos do body são válidos. [Leia mais sobre Guards na documentação do Nest.js](https://docs.nestjs.com/guards)
+- <strong>LocalStrategy</strong> é a estratégia de autenticação escolhida. Se da pelo uso de um email e senha para a autenticação. [Leia mais sobre a local-strategy na documentação do Passport.js](https://www.passportjs.org/packages/passport-local/)
 
 _Fluxo para clientes externos em desenvolvimento._
 
 ## 👨‍💻 Desenvolvimento
+
 > [!TIP]
 > Manter o padrão na criação de arquivos como dtos, interface, guards. Siga o exemplo do que já está no repositório! Isso também vale para variáveis e funções.
 
@@ -188,18 +195,19 @@ _Fluxo para clientes externos em desenvolvimento._
 - - Exemplos:
   - - Ao invés de `POST /v1/user/`
     - Tente `POST /v1/user/create/`
- 
+
 - 🔢 Retorno semântico de <strong>_status code_</strong> com base na resposta da rota.
 - - Exemplos:
   - - Ao invés de `POST /v1/user/create/ -> Response 200 OK`
     - Tente `POST /v1/user/create/ -> Response 201 CREATED`
- 
+
 - 🔞 Uso semântico dos <strong>métodos _HTTP_</strong> com base na ação da rota.
 - - Exemplos:
   - - Ao invés de `GET /v1/user/delete/1 -> Response 204 NO CONTENT`
     - Tente `DELETE /v1/user/delete/1 -> Response 204 NO CONTENT`
-   
+
 ### Configurações e particularidades da API
+
 <details>
 
 <summary>Uso do Guard <strong>JwtAuthGuard</strong></summary>
@@ -209,6 +217,7 @@ _Fluxo para clientes externos em desenvolvimento._
 A intenção é que todas as rotas do seu módulo necessitem de um token. Evita ter que adicionar o Guard individualmente para cada rota.
 
 Exemplo do [_users.module.ts_](https://github.com/laboratorio-de-praticas/autenticacao-be/blob/bf1589cb3b6aa2f94bfdcaaf7f2cafa6fee21ea3/src/users/users.module.ts#L14):
+
 ```ts
   @Module({
   imports: [TypeOrmModule.forFeature([User])],
@@ -223,7 +232,9 @@ Exemplo do [_users.module.ts_](https://github.com/laboratorio-de-praticas/autent
   controllers: [UsersController],
 })
 ```
+
 O que você deve fazer é apenas acrescentar a configuração abaixo no providers do módulo alvo:
+
 ```ts
   {
     provide: APP_GUARD,
@@ -242,6 +253,7 @@ O que você deve fazer é apenas acrescentar a configuração abaixo no provider
 O uso desse decorator faz com que a sua rota não necessite de um _token_ (acho difícil você querer isso)
 
 Exemplo do [_app.controller.ts_](https://github.com/laboratorio-de-praticas/autenticacao-be/blob/bf1589cb3b6aa2f94bfdcaaf7f2cafa6fee21ea3/src/app/app.controller.ts#L41):
+
 ```ts
   @Public()
   @Get()
@@ -249,6 +261,7 @@ Exemplo do [_app.controller.ts_](https://github.com/laboratorio-de-praticas/aute
     return this.appService.getHello();
   }
 ```
+
 o _@Public()_ faz com que não seja necessário um _token_ para fazer requisição a essa rota.
 
 </details>

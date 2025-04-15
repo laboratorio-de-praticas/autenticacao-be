@@ -1,16 +1,31 @@
-import { Body, Controller, Post, Delete, Get, Param, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Delete,
+  Get,
+  Param,
+  Put,
+} from '@nestjs/common';
 import { UserCreateRequestDto } from './dto/user-create-request.dto';
 import { UserCreateResponseDto } from './dto/user-create-response.dto';
 import { UserUpdateRequestDto } from './dto/user-update-request.dto';
 import { UserUpdateResponseDto } from './dto/user-update-response.dto';
 import { UsersService } from './users.service';
 import { Public } from 'src/auth/constants';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('Usuário')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({ summary: 'Criação do usuário.' })
   @ApiBody({
@@ -35,6 +50,7 @@ export class UsersController {
     status: 200,
     description: 'Lista de usuários.',
   })
+  @ApiBearerAuth()
   @Get()
   async findAll() {
     return this.usersService.findAll();
@@ -46,6 +62,7 @@ export class UsersController {
     status: 200,
     description: 'Usuário encontrado.',
   })
+  @ApiBearerAuth()
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.usersService.findOne(id);
@@ -62,6 +79,7 @@ export class UsersController {
     description: 'Usuário atualizado com sucesso.',
     type: UserUpdateResponseDto,
   })
+  @ApiBearerAuth()
   @Put(':id')
   async updateUser(
     @Param('id') id: number,
@@ -76,6 +94,7 @@ export class UsersController {
     status: 200,
     description: 'Usuário deletado com sucesso.',
   })
+  @ApiBearerAuth()
   @Delete(':id')
   async deleteUser(@Param('id') id: number) {
     await this.usersService.deleteUser(id);
