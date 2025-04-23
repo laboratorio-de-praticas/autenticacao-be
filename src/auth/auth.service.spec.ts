@@ -6,6 +6,7 @@ import { AuthenticatedUser } from './interfaces/authenticated-user';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
+import { UsuarioStatus } from 'src/entities/user.entity';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -20,14 +21,14 @@ describe('AuthService', () => {
 
   const mockUser = {
     id: 1,
-    email: 'test@example.com',
-    password: 'hashedPassword',
+    email_institucional: 'test@example.com',
+    senha: 'hashedPassword',
   };
 
   const authenticatedUser: AuthenticatedUser = {
     id: 1,
-    email: 'test@example.com',
-    isActive: true,
+    email_institucional: 'test@example.com',
+    status_usuario: UsuarioStatus.ATIVO,
   };
 
   const mockLoginResponse: UserLoginResponseDto = {
@@ -77,7 +78,7 @@ describe('AuthService', () => {
 
       expect(result).toEqual({
         id: authenticatedUser.id,
-        email: authenticatedUser.email,
+        email_institucional: authenticatedUser.email_institucional,
       });
     });
 
