@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { UserCreateRequestDto } from './dto/user-create-request.dto';
 import { UserCreateResponseDto } from './dto/user-create-response.dto';
 import { UserUpdateRequestDto } from './dto/user-update-request.dto';
-import { ConflictException } from '@nestjs/common';
+import { UsuarioStatus, UsuarioTipos } from 'src/entities/user.entity';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -13,15 +13,15 @@ describe('UsersController', () => {
   const mockUsersService: Partial<Record<keyof UsersService, jest.Mock>> = {
     createUser: jest.fn(),
     findAll: jest.fn(),
-    findOne: jest.fn(), // <== Adicionado corretamente
+    findOne: jest.fn(),
     updateUser: jest.fn(),
     deleteUser: jest.fn(),
   };
 
-
   const userCreateRequestDto: UserCreateRequestDto = {
-    email: 'test@example.com',
-    password: 'password123',
+    nome: 'Test User',
+    email_institucional: 'test@example.com',
+    senha: 'password123',
   };
 
   const userCreateResponseDto: UserCreateResponseDto = {
@@ -30,17 +30,21 @@ describe('UsersController', () => {
   };
 
   const userUpdateRequestDto: UserUpdateRequestDto = {
-    email: 'updated@example.com',
-    password: 'newpass123',
+    nome: 'Updated User',
+    email_institucional: 'updated@example.com',
+    senha: 'newpass123',
+    tipo_usuario: UsuarioTipos.ATENDENTE,
+    status_usuario: UsuarioStatus.ATIVO,
   };
 
   const existingUser = {
     id: 1,
-    name: 'John Doe',
-    email: 'john@example.com',
-    password: 'hashedpassword',
-    isActive: true, // Adicione essa propriedade se for necessária
+    nome: 'John Doe',
+    email_institucional: 'john@example.com',
+    tipo_usuario: UsuarioTipos.ATENDENTE,
+    status_usuario: UsuarioStatus.ATIVO,
   };
+
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       controllers: [UsersController],
@@ -93,16 +97,20 @@ describe('UsersController', () => {
         message: 'Usuário atualizado com sucesso.',
       });
 
-      const result = await controller.updateUser(existingUser.id, userUpdateRequestDto);
+      const result = await controller.updateUser(
+        existingUser.id,
+        userUpdateRequestDto,
+      );
 
       expect(result).toEqual({
         id: existingUser.id,
         message: 'Usuário atualizado com sucesso.',
       });
-      expect(usersService.updateUser).toHaveBeenCalledWith(existingUser.id, userUpdateRequestDto);
+      expect(usersService.updateUser).toHaveBeenCalledWith(
+        existingUser.id,
+        userUpdateRequestDto,
+      );
     });
-
-
 
     describe('deleteUser', () => {
       it('should delete a user', async () => {
@@ -112,5 +120,5 @@ describe('UsersController', () => {
         expect(usersService.deleteUser).toHaveBeenCalledWith(existingUser.id);
       });
     });
-  })
-})
+  });
+});

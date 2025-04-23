@@ -1,5 +1,7 @@
+import { UsuarioStatus } from 'src/entities/user.entity';
+
 export interface AuthenticatedUser {
   id: number;
-  email: string;
-  isActive: boolean;
+  email_institucional: string;
+  status_usuario: UsuarioStatus;
 }

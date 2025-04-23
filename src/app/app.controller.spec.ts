@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthenticatedRequest } from 'src/auth/interfaces/authenticated-request.interface';
+import { UsuarioStatus, UsuarioTipos } from 'src/entities/user.entity';
 
 describe('AppController', () => {
   let controller: AppController;
@@ -15,10 +16,14 @@ describe('AppController', () => {
     login: jest.fn(),
   };
 
-  const mockUser = { id: 1, email: 'test@example.com', isActive: true };
+  const mockUser = {
+    id: 1,
+    nome: 'Test User',
+    email_institucional: 'test@example.com',
+    tipo_usuario: UsuarioTipos.ADMIN,
+    status_usuario: UsuarioStatus.ATIVO,
+  };
 
-
-  
   const mockLoginResponse = { accessToken: 'token' };
 
   beforeEach(async () => {
@@ -48,8 +53,10 @@ describe('AppController', () => {
     it('should call AuthService.login', async () => {
       mockAuthService.login.mockResolvedValue(mockLoginResponse);
 
-      const req = { user: mockUser } as AuthenticatedRequest;
-      const result = await controller.login(req);
+      const req: Partial<AuthenticatedRequest> = {
+        user: mockUser,
+      };
+      const result = await controller.login(req as AuthenticatedRequest);
 
       expect(mockAuthService.login).toHaveBeenCalledWith(mockUser);
       expect(result).toBe(mockLoginResponse);
@@ -58,17 +65,23 @@ describe('AppController', () => {
     it('should throw an error if AuthService.login fails', async () => {
       mockAuthService.login.mockRejectedValue(new Error('Login failed'));
 
-      const req = { user: mockUser } as AuthenticatedRequest;
+      const req: Partial<AuthenticatedRequest> = {
+        user: mockUser,
+      };
 
-      await expect(controller.login(req)).rejects.toThrow('Login failed');
+      await expect(
+        controller.login(req as AuthenticatedRequest),
+      ).rejects.toThrow('Login failed');
       expect(mockAuthService.login).toHaveBeenCalledWith(mockUser);
     });
   });
 
   describe('getProfile', () => {
     it('should return the user object from the request', () => {
-      const req = { user: mockUser } as AuthenticatedRequest;
-      const result = controller.getProfile(req);
+      const req: Partial<AuthenticatedRequest> = {
+        user: mockUser,
+      };
+      const result = controller.getProfile(req as AuthenticatedRequest);
 
       expect(result).toEqual(mockUser);
     });

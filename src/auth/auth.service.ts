@@ -13,20 +13,20 @@ export class AuthService {
   ) {}
 
   async validateUser(
-    email: string,
-    password: string,
+    email_institucional: string,
+    senha: string,
   ): Promise<AuthenticatedUser> {
-    const user = await this.usersService.findByEmail(email);
+    const user = await this.usersService.findByEmail(email_institucional);
     if (!user) {
       throw new UnauthorizedException('E-mail ou senha inválidos.');
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(senha, user.senha);
     if (!isMatch) {
       throw new UnauthorizedException('E-mail ou senha inválidos.');
     }
 
-    const { password: _, ...result } = user;
+    const { senha: _, ...result } = user;
     return result as AuthenticatedUser;
   }
 
