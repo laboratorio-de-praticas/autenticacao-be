@@ -6,6 +6,9 @@ import {
   Get,
   Param,
   Put,
+  Req,
+  UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import { UserCreateRequestDto } from './dto/user-create-request.dto';
 import { UserCreateResponseDto } from './dto/user-create-response.dto';
@@ -21,11 +24,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('Usuário')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  // rotas estaticas
 
   @ApiOperation({ summary: 'Criação do usuário.' })
   @ApiBody({
@@ -45,6 +51,23 @@ export class UsersController {
     return this.usersService.createUser(userCreateRequestDto);
   }
 
+  @ApiOperation({ summary: 'Retorna a role do usuário' })
+  @ApiResponse({
+    status: 200,
+    description: 'Role do usuário retornado com sucesso.',
+  })
+  @ApiBearerAuth()
+  @Get('role')
+  async getRole(@Req() req: any) {
+    const email = req.user.email_institucional;
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+    console.log(user);
+    return { tipo_usuario: user?.tipo_usuario };
+  }
+
   @ApiOperation({ summary: 'Listar todos os usuários.' })
   @ApiResponse({
     status: 200,
@@ -55,6 +78,8 @@ export class UsersController {
   async findAll() {
     return this.usersService.findAll();
   }
+
+  // rotas dinamicas
 
   @ApiOperation({ summary: 'Buscar usuário por ID.' })
   @ApiParam({ name: 'id', description: 'ID do usuário', type: Number })
