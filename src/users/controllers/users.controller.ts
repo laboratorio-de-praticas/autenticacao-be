@@ -7,14 +7,13 @@ import {
   Param,
   Put,
   Req,
-  UseGuards,
   NotFoundException,
 } from '@nestjs/common';
-import { UserCreateRequestDto } from './dto/user-create-request.dto';
-import { UserCreateResponseDto } from './dto/user-create-response.dto';
-import { UserUpdateRequestDto } from './dto/user-update-request.dto';
-import { UserUpdateResponseDto } from './dto/user-update-response.dto';
-import { UsersService } from './users.service';
+import { UserCreateRequestDto } from '../dto/user-create-request.dto';
+import { UserCreateResponseDto } from '../dto/user-create-response.dto';
+import { UserUpdateRequestDto } from '../dto/user-update-request.dto';
+import { UserUpdateResponseDto } from '../dto/user-update-response.dto';
+import { UsersService } from '../services/users.service';
 import { Public } from 'src/auth/constants';
 import {
   ApiBearerAuth,
@@ -24,7 +23,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('Usuário')
 @Controller('users')
@@ -44,6 +42,7 @@ export class UsersController {
     type: UserCreateResponseDto,
   })
   @Public()
+  @ApiBearerAuth()
   @Post('create')
   async createUser(
     @Body() userCreateRequestDto: UserCreateRequestDto,
