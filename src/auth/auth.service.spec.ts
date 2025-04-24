@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/services/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { AuthenticatedUser } from './interfaces/authenticated-user';
+import { AuthenticatedUser } from './interfaces/user-authenticated';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
