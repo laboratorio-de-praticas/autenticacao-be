@@ -24,7 +24,7 @@ export class ExternalUsersController {
     type: ExternalUserCreateRequestDto,
   })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Cadastro do visitante realizado com sucesso.',
     type: ExternalUserCreateResponseDto,
   })

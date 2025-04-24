@@ -37,7 +37,7 @@ export class UsersController {
     type: UserCreateRequestDto,
   })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Usuário criado com sucesso.',
     type: UserCreateResponseDto,
   })
@@ -104,7 +104,7 @@ export class UsersController {
     type: UserUpdateResponseDto,
   })
   @ApiBearerAuth()
-  @Put(':id')
+  @Put('update/:id')
   async updateUser(
     @Param('id') id: number,
     @Body() userUpdateRequestDto: UserUpdateRequestDto,
@@ -119,7 +119,7 @@ export class UsersController {
     description: 'Usuário deletado com sucesso.',
   })
   @ApiBearerAuth()
-  @Delete(':id')
+  @Delete('delete/:id')
   async deleteUser(@Param('id') id: number) {
     await this.usersService.deleteUser(id);
     return { message: 'Usuário deletado com sucesso.' };
