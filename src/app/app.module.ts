@@ -8,6 +8,7 @@ import { UsersModule } from '../users/users.module';
 import { databaseConstants } from '../auth/constants';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { Visitor } from 'src/entities/external-user.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { APP_GUARD } from '@nestjs/core';
       username: databaseConstants.username,
       password: databaseConstants.password,
       database: databaseConstants.database,
-      entities: [User],
+      entities: [User, Visitor],
       synchronize: true, // false in prod
     }),
     AuthModule,
