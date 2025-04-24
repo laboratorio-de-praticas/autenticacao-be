@@ -64,7 +64,6 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
-    console.log(user);
     return { tipo_usuario: user?.tipo_usuario };
   }
 
