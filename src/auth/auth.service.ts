@@ -15,11 +15,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(
-    email_institucional: string,
-    senha: string,
-  ): Promise<UserAuthenticated> {
-    const user = await this.usersService.findByEmail(email_institucional);
+  async validateUser(email: string, senha: string): Promise<UserAuthenticated> {
+    const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new UnauthorizedException('E-mail ou senha inválidos.');
     }
@@ -29,8 +26,8 @@ export class AuthService {
       throw new UnauthorizedException('E-mail ou senha inválidos.');
     }
 
-    const { senha: _, ...result } = user;
-    return result as UserAuthenticated;
+    const { email_institucional, nome, data_criacao } = user;
+    return { email_institucional, nome, data_criacao };
   }
 
   async validateExternalUser(
@@ -42,9 +39,9 @@ export class AuthService {
       throw new UnauthorizedException('Código de acesso inválido.');
     }
 
-    const { chave_acesso: _, ...result } = external_user;
+    const { nome, data_criacao } = external_user;
 
-    return result as ExternalUserAuthenticated;
+    return { nome, data_criacao };
   }
 
   async login(user: UserAuthenticated): Promise<UserLoginResponseDto> {
