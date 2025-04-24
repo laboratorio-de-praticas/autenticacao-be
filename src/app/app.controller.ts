@@ -19,7 +19,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UserLoginResponseDto } from 'src/auth/dto/user-login-response.dto';
-import { UserProfileResponseDto } from 'src/auth/dto/user-profile-response.dto';
 import { UserAuthenticatedRequest } from 'src/auth/interfaces/user-authenticated-request';
 import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
 import { UserLoginRequestDto } from 'src/auth/dto/user-login-request.dto';
@@ -92,7 +91,6 @@ export class AppController {
   @ApiResponse({
     status: 200,
     description: 'Dados retornados com sucesso.',
-    type: UserProfileResponseDto,
   })
   @ApiBearerAuth()
   @Get('profile')
