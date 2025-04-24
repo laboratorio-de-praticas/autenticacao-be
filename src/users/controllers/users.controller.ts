@@ -23,6 +23,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserAuthenticatedRequest } from 'src/auth/interfaces/user-authenticated-request';
 
 @ApiTags('Usuário')
 @Controller('users')
@@ -57,7 +58,7 @@ export class UsersController {
   })
   @ApiBearerAuth()
   @Get('role')
-  async getRole(@Req() req: any) {
+  async getRole(@Req() req: UserAuthenticatedRequest) {
     const email = req.user.email_institucional;
     const user = await this.usersService.findByEmail(email);
     if (!user) {
