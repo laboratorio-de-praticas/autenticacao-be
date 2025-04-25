@@ -51,7 +51,7 @@ export class UsersController {
     return this.usersService.createUser(userCreateRequestDto);
   }
 
-  @ApiOperation({ summary: 'Retorna a role do usuário' })
+  @ApiOperation({ summary: 'Retorna a role do usuário.' })
   @ApiResponse({
     status: 200,
     description: 'Role do usuário retornado com sucesso.',

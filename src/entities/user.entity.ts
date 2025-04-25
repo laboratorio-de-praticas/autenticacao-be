@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 export enum UsuarioTipos {
@@ -43,7 +44,7 @@ export class User {
   })
   data_criacao: Date;
 
-  @CreateDateColumn({
+  @UpdateDateColumn({
     name: 'data_alteracao',
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',

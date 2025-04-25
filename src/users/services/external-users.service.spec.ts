@@ -1,2 +1,1 @@
-describe('UsersService', () => {
-});
+describe('UsersService', () => {});

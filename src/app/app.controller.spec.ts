@@ -56,7 +56,7 @@ describe('AppController', () => {
       const req: Partial<AuthenticatedRequest> = {
         user: mockUser,
       };
-      const result = await controller.login(req as AuthenticatedRequest);
+      const result = await controller.login(req);
 
       expect(mockAuthService.login).toHaveBeenCalledWith(mockUser);
       expect(result).toBe(mockLoginResponse);
@@ -69,9 +69,7 @@ describe('AppController', () => {
         user: mockUser,
       };
 
-      await expect(
-        controller.login(req as AuthenticatedRequest),
-      ).rejects.toThrow('Login failed');
+      await expect(controller.login(req)).rejects.toThrow('Login failed');
       expect(mockAuthService.login).toHaveBeenCalledWith(mockUser);
     });
   });
@@ -81,7 +79,7 @@ describe('AppController', () => {
       const req: Partial<AuthenticatedRequest> = {
         user: mockUser,
       };
-      const result = controller.getProfile(req as AuthenticatedRequest);
+      const result = controller.getProfile(req);
 
       expect(result).toEqual(mockUser);
     });

@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('Visitantes')
@@ -13,7 +14,7 @@ export class Visitor {
   @Column({ type: 'text' })
   nome: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', unique: true })
   telefone: string;
 
   @Column({ type: 'text', unique: true })
@@ -26,7 +27,7 @@ export class Visitor {
   })
   data_criacao: Date;
 
-  @CreateDateColumn({
+  @UpdateDateColumn({
     name: 'data_alteracao',
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
