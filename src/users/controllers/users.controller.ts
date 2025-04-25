@@ -7,14 +7,13 @@ import {
   Param,
   Put,
   Req,
-  UseGuards,
   NotFoundException,
 } from '@nestjs/common';
-import { UserCreateRequestDto } from './dto/user-create-request.dto';
-import { UserCreateResponseDto } from './dto/user-create-response.dto';
-import { UserUpdateRequestDto } from './dto/user-update-request.dto';
-import { UserUpdateResponseDto } from './dto/user-update-response.dto';
-import { UsersService } from './users.service';
+import { UserCreateRequestDto } from '../dto/user-create-request.dto';
+import { UserCreateResponseDto } from '../dto/user-create-response.dto';
+import { UserUpdateRequestDto } from '../dto/user-update-request.dto';
+import { UserUpdateResponseDto } from '../dto/user-update-response.dto';
+import { UsersService } from '../services/users.service';
 import { Public } from 'src/auth/constants';
 import {
   ApiBearerAuth,
@@ -24,7 +23,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { UserAuthenticatedRequest } from 'src/auth/interfaces/user-authenticated-request';
 
 @ApiTags('Usuário')
 @Controller('users')
@@ -39,11 +38,12 @@ export class UsersController {
     type: UserCreateRequestDto,
   })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Usuário criado com sucesso.',
     type: UserCreateResponseDto,
   })
   @Public()
+  @ApiBearerAuth()
   @Post('create')
   async createUser(
     @Body() userCreateRequestDto: UserCreateRequestDto,
@@ -58,13 +58,12 @@ export class UsersController {
   })
   @ApiBearerAuth()
   @Get('role')
-  async getRole(@Req() req: any) {
+  async getRole(@Req() req: UserAuthenticatedRequest) {
     const email = req.user.email_institucional;
     const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
-    console.log(user);
     return { tipo_usuario: user?.tipo_usuario };
   }
 
@@ -105,7 +104,7 @@ export class UsersController {
     type: UserUpdateResponseDto,
   })
   @ApiBearerAuth()
-  @Put(':id')
+  @Put('update/:id')
   async updateUser(
     @Param('id') id: number,
     @Body() userUpdateRequestDto: UserUpdateRequestDto,
@@ -120,7 +119,7 @@ export class UsersController {
     description: 'Usuário deletado com sucesso.',
   })
   @ApiBearerAuth()
-  @Delete(':id')
+  @Delete('delete/:id')
   async deleteUser(@Param('id') id: number) {
     await this.usersService.deleteUser(id);
     return { message: 'Usuário deletado com sucesso.' };

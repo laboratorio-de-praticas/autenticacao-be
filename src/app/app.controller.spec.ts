@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthService } from 'src/auth/auth.service';
-import { AuthenticatedRequest } from 'src/auth/interfaces/authenticated-request.interface';
+import { AuthenticatedRequest } from 'src/auth/interfaces/user-authenticated-request';
 import { UsuarioStatus, UsuarioTipos } from 'src/entities/user.entity';
 
 describe('AppController', () => {

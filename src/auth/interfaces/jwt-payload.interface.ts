@@ -1,7 +1,4 @@
-import { UsuarioStatus } from 'src/entities/user.entity';
+import { ExternalUserAuthenticated } from './external-user-authenticated';
+import { UserAuthenticated } from './user-authenticated';
 
-export interface JwtPayload {
-  id: number;
-  email_institucional: string;
-  status_usuario: UsuarioStatus;
-}
+export type JwtPayload = UserAuthenticated | ExternalUserAuthenticated;

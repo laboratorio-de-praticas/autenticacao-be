@@ -1,9 +1,9 @@
 import { Test } from '@nestjs/testing';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
-import { UserCreateRequestDto } from './dto/user-create-request.dto';
-import { UserCreateResponseDto } from './dto/user-create-response.dto';
-import { UserUpdateRequestDto } from './dto/user-update-request.dto';
+import { UsersController } from '../controllers/users.controller';
+import { UsersService } from '../services/users.service';
+import { UserCreateRequestDto } from '../dto/user-create-request.dto';
+import { UserCreateResponseDto } from '../dto/user-create-response.dto';
+import { UserUpdateRequestDto } from '../dto/user-update-request.dto';
 import { UsuarioStatus, UsuarioTipos } from 'src/entities/user.entity';
 
 describe('UsersController', () => {

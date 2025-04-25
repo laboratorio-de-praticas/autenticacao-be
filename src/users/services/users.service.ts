@@ -3,14 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { User, UsuarioStatus } from '../entities/user.entity';
+import { User, UsuarioStatus } from '../../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserCreateRequestDto } from './dto/user-create-request.dto';
+import { UserCreateRequestDto } from '../dto/user-create-request.dto';
 import * as bcrypt from 'bcrypt';
-import { UserCreateResponseDto } from './dto/user-create-response.dto';
-import { UserUpdateRequestDto } from './dto/user-update-request.dto';
-import { UserUpdateResponseDto } from './dto/user-update-response.dto';
+import { UserCreateResponseDto } from '../dto/user-create-response.dto';
+import { UserUpdateRequestDto } from '../dto/user-update-request.dto';
+import { UserUpdateResponseDto } from '../dto/user-update-response.dto';
 
 @Injectable()
 export class UsersService {

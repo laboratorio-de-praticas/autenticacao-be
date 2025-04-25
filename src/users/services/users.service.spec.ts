@@ -1,4 +1,4 @@
-import { UsersService } from './users.service';
+import { UsersService } from '../services/users.service';
 import { User, UsuarioStatus, UsuarioTipos } from 'src/entities/user.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
