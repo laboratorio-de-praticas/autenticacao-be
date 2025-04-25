@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { Visitor } from '../../entities/external-user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -28,6 +32,13 @@ export class ExternalUsersService {
   async createExternalUser(
     createExternalUserDto: ExternalUserCreateRequestDto,
   ): Promise<ExternalUserCreateResponseDto> {
+    const userExists = await this.findByPhoneNumber(
+      createExternalUserDto.telefone,
+    );
+    if (userExists) {
+      throw new ConflictException('Este telefone já está cadastrado.');
+    }
+
     const access_key = await this.generateUniqueAccessKey();
     const newVisitor = this.visitorsRepository.create({
       chave_acesso: access_key,
@@ -46,5 +57,9 @@ export class ExternalUsersService {
     return await this.visitorsRepository.findOneBy({
       chave_acesso: access_key,
     });
+  }
+
+  async findByPhoneNumber(phone_number: string): Promise<Visitor | null> {
+    return await this.visitorsRepository.findOneBy({ telefone: phone_number });
   }
 }
